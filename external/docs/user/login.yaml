@@ -25,26 +25,9 @@
             schema:
               type: object
               properties:
-                user:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    name:
-                      type: string
-                    position:
-                      type: string
-                    email:
-                      type: string
-                    organization:
-                      type: string
-                    role:
-                      type: string
-                    is_archive:
-                      type: boolean
-                access_token:
+                id:
                   type: string
-                refresh_token:
+                accessToken:
                   type: string
       404:
         $ref: "#/definitions/404"
