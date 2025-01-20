@@ -5,7 +5,7 @@ const SortOrders = z.enum(["asc", "desc"]);
 
 const schema = z.object({
     search: z.string().optional(),
-    isCompleted: z.enum(["true", "false"]).optional(),
+    isCompleted: z.boolean().optional(),
     sortCreatedAt: SortOrders.optional(),
     sortTitle: SortOrders.optional(),
     sortNotifyAt: SortOrders.optional(),

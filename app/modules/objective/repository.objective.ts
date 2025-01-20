@@ -17,7 +17,7 @@ export async function getAll(con: Kysely<DB> | Transaction<DB>, userId: string, 
     let query = con.selectFrom("objectives").selectAll().where("creatorId", "=", userId);
 
     query = query
-        .$if(Boolean(filters?.isCompleted), (q) => q.where("isCompleted", "=", filters.isCompleted === "true"))
+        .$if(Boolean(filters?.isCompleted), (q) => q.where("isCompleted", "=", filters.isCompleted!))
         .$if(Boolean(filters?.search), (q) => q.where("title", "like", `%${filters.search}%`))
         .$if(Boolean(filters?.sortCreatedAt), (q) => q.orderBy("createdAt", filters.sortCreatedAt))
         .$if(Boolean(filters?.sortNotifyAt), (q) => q.orderBy("notifyAt", filters.sortNotifyAt))
