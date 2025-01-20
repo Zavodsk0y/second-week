@@ -25,6 +25,7 @@ export async function update(req: FastifyRequest<{ Body: createObjectiveSchema; 
 
     const objective = await objectiveRepository.getById(sqlCon, id);
 
+    // TODO: DRY violation, need to fix, think about objective - we really need it?
     if (!objective) {
         const info: IHandlingResponseError = { type: HandlingErrorType.Found, property: "id" };
         return rep.code(HttpStatusCode.NOT_FOUND).send(info);
@@ -40,10 +41,16 @@ export async function findOne(req: FastifyRequest<{ Params: uuidObjectiveSchema 
 
     const objective = await objectiveRepository.getById(sqlCon, id);
 
+    // TODO: DRY violation, need to fix
     if (!objective) {
         const info: IHandlingResponseError = { type: HandlingErrorType.Found, property: "id" };
         return rep.code(HttpStatusCode.NOT_FOUND).send(info);
     }
 
     return rep.code(HttpStatusCode.OK).send({ ...objective });
+}
+
+export async function findAll(req: FastifyRequest, rep: FastifyReply) {
+    const objectives = await objectiveRepository.findAll(sqlCon, req.user.id!);
+    return rep.code(HttpStatusCode.OK).send(objectives);
 }

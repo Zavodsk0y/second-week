@@ -8,6 +8,10 @@ export async function insert(con: Kysely<DB> | Transaction<DB>, entity: Insertab
     return await con.insertInto("objectives").returningAll().values(entity).executeTakeFirstOrThrow();
 }
 
+export async function findAll(con: Kysely<DB> | Transaction<DB>, userId: string) {
+    return await con.selectFrom("objectives").selectAll().where("creatorId", "=", userId).execute();
+}
+
 export async function getById(con: Kysely<DB> | Transaction<DB>, id: string) {
     return await con.selectFrom("objectives").selectAll().where("id", "=", id).executeTakeFirst();
 }
@@ -17,6 +21,7 @@ export async function update(con: Kysely<DB> | Transaction<DB>, id: string, sche
         .updateTable("objectives")
         .returningAll()
         .set({ ...schema })
+        .set({ updatedAt: `now()` })
         .where("id", "=", id)
         .executeTakeFirst();
 }
