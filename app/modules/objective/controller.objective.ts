@@ -1,7 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import type { IHandlingResponseError } from "../../common/config/http-response";
 import { sqlCon } from "../../common/config/kysely-config";
-import { logger } from "../../common/config/pino-plugin";
 import { HandlingErrorType } from "../../common/enum/error-types";
 import { HttpStatusCode } from "../../common/enum/http-status-code";
 import { uuidObjectiveSchema } from "../../common/schemas/uuid-objective.schema";
@@ -60,13 +59,7 @@ export async function findOne(req: FastifyRequest<{ Params: uuidObjectiveSchema 
 }
 
 export async function findAll(req: FastifyRequest<{ Querystring: paramsObjectiveSchema }>, rep: FastifyReply) {
-    const objectives = await objectiveRepository.findAll(sqlCon, req.user.id!);
-    const { isCompleted } = req.query;
-    logger.info({ isCompleted });
-    if (isCompleted) {
-        if (isCompleted === "true") {
-            return rep.code(HttpStatusCode.OK).send(objectives.filter((objective) => objective.isCompleted));
-        } else return rep.code(HttpStatusCode.OK).send(objectives.filter((objective) => !objective.isCompleted));
-    }
+    const objectives = await objectiveRepository.getAll(sqlCon, req.user.id!, req.query);
+
     return rep.code(HttpStatusCode.OK).send(objectives);
 }
