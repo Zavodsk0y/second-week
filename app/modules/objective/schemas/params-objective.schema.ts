@@ -8,7 +8,9 @@ const schema = z.object({
     isCompleted: z.enum(["true", "false"]).optional(),
     sortCreatedAt: SortOrders.optional(),
     sortTitle: SortOrders.optional(),
-    sortNotifyAt: SortOrders.optional()
+    sortNotifyAt: SortOrders.optional(),
+    limit: z.number().optional(),
+    offset: z.number().optional()
 });
 
 export type paramsObjectiveSchema = z.infer<typeof schema>;

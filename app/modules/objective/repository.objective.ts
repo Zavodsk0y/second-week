@@ -16,14 +16,14 @@ export async function findAll(con: Kysely<DB> | Transaction<DB>, userId: string)
 export async function getAll(con: Kysely<DB> | Transaction<DB>, userId: string, filters: paramsObjectiveSchema) {
     let query = con.selectFrom("objectives").selectAll().where("creatorId", "=", userId);
 
-    query = query.$if(filters?.isCompleted !== undefined, (q) => q.where("isCompleted", "=", filters.isCompleted === "true"));
-
-    query = query.$if(filters?.search !== undefined, (q) => q.where("title", "like", `%${filters.search}%`));
-
     query = query
-        .$if(filters?.sortCreatedAt !== undefined, (q) => q.orderBy("createdAt", filters.sortCreatedAt))
-        .$if(filters?.sortNotifyAt !== undefined, (q) => q.orderBy("notifyAt", filters.sortNotifyAt))
-        .$if(filters?.sortTitle !== undefined, (q) => q.orderBy("title", filters.sortTitle));
+        .$if(Boolean(filters?.isCompleted), (q) => q.where("isCompleted", "=", filters.isCompleted === "true"))
+        .$if(Boolean(filters?.search), (q) => q.where("title", "like", `%${filters.search}%`))
+        .$if(Boolean(filters?.sortCreatedAt), (q) => q.orderBy("createdAt", filters.sortCreatedAt))
+        .$if(Boolean(filters?.sortNotifyAt), (q) => q.orderBy("notifyAt", filters.sortNotifyAt))
+        .$if(Boolean(filters?.sortTitle), (q) => q.orderBy("title", filters.sortTitle))
+        .$if(Boolean(filters?.limit), (q) => q.limit(Number(filters.limit)))
+        .$if(Boolean(filters?.offset), (q) => q.offset(Number(filters.offset)));
     return await query.execute();
 }
 
