@@ -11,5 +11,5 @@ const schema = z.object({
     isCompleted: z.boolean()
 });
 
-export type objectiveSchema = z.infer<typeof schema>;
-export const objectiveFSchema: FastifySchema = { body: schema };
+export type createObjectiveResponseSchema = z.infer<typeof schema>;
+export const createObjectiveResponseFSchema: FastifySchema = { body: schema };
