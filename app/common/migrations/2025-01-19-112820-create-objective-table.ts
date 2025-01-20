@@ -14,7 +14,7 @@ export async function up(db: Kysely<any>) {
             col.defaultTo(sql`now()`).notNull())
         .addColumn("updatedAt", "timestamp", (col) =>
             col.defaultTo(sql`now()`).notNull())
-        .addColumn("is_completed", "boolean", (col) =>
+        .addColumn("isCompleted", "boolean", (col) =>
             col.defaultTo(sql`false`).notNull())
         .execute();
 
