@@ -14,5 +14,5 @@ export async function create(req: FastifyRequest<{ Body: createObjectiveSchema }
 
     const insertedObjective = await objectiveRepository.insert(sqlCon, objective);
 
-    return rep.code(HttpStatusCode.OK).send({ ...insertedObjective });
+    return rep.code(HttpStatusCode.CREATED).send({ ...insertedObjective });
 }
