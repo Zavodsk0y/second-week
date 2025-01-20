@@ -20,8 +20,7 @@ export async function update(con: Kysely<DB> | Transaction<DB>, id: string, sche
     return await con
         .updateTable("objectives")
         .returningAll()
-        .set({ ...schema })
-        .set({ updatedAt: `now()` })
+        .set({ ...schema, updatedAt: `now()` })
         .where("id", "=", id)
         .executeTakeFirst();
 }
