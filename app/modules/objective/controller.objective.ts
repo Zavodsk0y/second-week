@@ -6,6 +6,7 @@ import { HttpStatusCode } from "../../common/enum/http-status-code";
 import { uuidObjectiveSchema } from "../../common/schemas/uuid-objective.schema";
 import * as objectiveRepository from "./repository.objective";
 import { createObjectiveSchema } from "./schemas/create-objective.schema";
+import { updateObjectiveSchema } from "./schemas/update-objective.schema";
 
 export async function create(req: FastifyRequest<{ Body: createObjectiveSchema }>, rep: FastifyReply) {
     const objective = {
@@ -20,7 +21,7 @@ export async function create(req: FastifyRequest<{ Body: createObjectiveSchema }
     return rep.code(HttpStatusCode.CREATED).send({ ...insertedObjective });
 }
 
-export async function update(req: FastifyRequest<{ Body: createObjectiveSchema; Params: uuidObjectiveSchema }>, rep: FastifyReply) {
+export async function update(req: FastifyRequest<{ Body: updateObjectiveSchema; Params: uuidObjectiveSchema }>, rep: FastifyReply) {
     const { id } = req.params;
 
     const objective = await objectiveRepository.getById(sqlCon, id);
