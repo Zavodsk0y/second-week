@@ -22,8 +22,8 @@ export async function getAll(con: Kysely<DB> | Transaction<DB>, userId: string, 
         .$if(Boolean(filters?.sortCreatedAt), (q) => q.orderBy("createdAt", filters.sortCreatedAt))
         .$if(Boolean(filters?.sortNotifyAt), (q) => q.orderBy("notifyAt", filters.sortNotifyAt))
         .$if(Boolean(filters?.sortTitle), (q) => q.orderBy("title", filters.sortTitle))
-        .$if(Boolean(filters?.limit), (q) => q.limit(Number(filters.limit)))
-        .$if(Boolean(filters?.offset), (q) => q.offset(Number(filters.offset)));
+        .$if(Boolean(filters?.limit), (q) => q.limit(filters.limit!))
+        .$if(Boolean(filters?.offset), (q) => q.offset(filters.offset!));
     return await query.execute();
 }
 
