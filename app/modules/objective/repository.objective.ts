@@ -8,5 +8,5 @@ export async function insert(con: Kysely<DB> | Transaction<DB>, entity: Insertab
 }
 
 export async function getById(con: Kysely<DB> | Transaction<DB>, id: string) {
-    return await con.selectFrom("objectives").selectAll().where("id", "=", id).executeTakeFirstOrThrow();
+    return await con.selectFrom("objectives").selectAll().where("id", "=", id).executeTakeFirst();
 }
