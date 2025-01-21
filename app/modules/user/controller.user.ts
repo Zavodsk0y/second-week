@@ -15,10 +15,8 @@ const generateJwt = (id: string, email: string) => {
 };
 
 export async function create(req: FastifyRequest<{ Body: signUpSchema }>, rep: FastifyReply) {
-    const isEmailExists = checkUniqueField(userRepository.getByEmail, sqlCon, req.body.email, "email", rep);
-    if (!isEmailExists) return;
-    const isLoginExists = checkUniqueField(userRepository.getByLogin, sqlCon, req.body.login, "login", rep);
-    if (!isLoginExists) return;
+    await checkUniqueField(userRepository.getByEmail, sqlCon, req.body.email, "email");
+    await checkUniqueField(userRepository.getByLogin, sqlCon, req.body.login, "login");
 
     const hashPassword = await bcrypt.hash(req.body.password, 5);
 
@@ -45,10 +43,6 @@ export async function login(req: FastifyRequest<{ Body: loginSchema }>, rep: Fas
         const info: IHandlingResponseError = { type: HandlingErrorType.Found, property: "email" };
         return rep.code(HttpStatusCode.NOT_FOUND).send(info);
     }
-    if (user.password === null) {
-        const info: IHandlingResponseError = { type: HandlingErrorType.Empty, property: "password" };
-        return rep.code(HttpStatusCode.NOT_ACCEPTABLE).send(info);
-    }
     const isPasswordValid = await bcrypt.compare(req.body.password, user.password!);
     if (!isPasswordValid) {
         const info: IHandlingResponseError = { type: HandlingErrorType.Match, property: "password" };
@@ -62,10 +56,4 @@ export async function login(req: FastifyRequest<{ Body: loginSchema }>, rep: Fas
     };
 
     return rep.code(HttpStatusCode.OK).send(data);
-}
-
-export async function me(req: FastifyRequest, rep: FastifyReply) {
-    const user = await userRepository.getById(sqlCon, req.user.id!);
-
-    return rep.code(HttpStatusCode.OK).send(user);
 }
