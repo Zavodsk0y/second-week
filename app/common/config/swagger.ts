@@ -16,7 +16,7 @@ const swaggerDocument = SwaggerJSDoc({
             version: "0.1.0",
             description: "<h3>The REST API documentation.</h3>" + "<b>Available error types:</b>" + `<ul>${errorTypes}</ul>`
         },
-        servers: [{ url: process.env.APP_HOST }],
+        servers: [{ url: "/" }],
         components: {
             securitySchemes: {
                 bearer: { type: "http", scheme: "bearer", bearerFormat: "JWT" }
