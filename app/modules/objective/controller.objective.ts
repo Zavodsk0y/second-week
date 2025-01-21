@@ -6,7 +6,7 @@ import * as objectiveRepository from "./repository.objective";
 import { createObjectiveSchema } from "./schemas/create-objective.schema";
 import { paramsObjectiveSchema } from "./schemas/params-objective.schema";
 import { updateObjectiveSchema } from "./schemas/update-objective.schema";
-import { checkObjectiveExists } from "./utils/check-objective-exists";
+import { checkObjectivePolicy } from "./utils/check-objective-policy";
 
 export async function create(req: FastifyRequest<{ Body: createObjectiveSchema }>, rep: FastifyReply) {
     const objective = {
@@ -30,8 +30,7 @@ export async function update(
 ) {
     const { id } = req.params;
 
-    const objective = await checkObjectiveExists(id, rep);
-    if (!objective) return;
+    await checkObjectivePolicy(id, req);
 
     const updatedObject = await objectiveRepository.update(sqlCon, id, req.body);
 
@@ -41,8 +40,7 @@ export async function update(
 export async function findOne(req: FastifyRequest<{ Params: uuidObjectiveSchema }>, rep: FastifyReply) {
     const { id } = req.params;
 
-    const objective = await checkObjectiveExists(id, rep);
-    if (!objective) return;
+    const objective = await checkObjectivePolicy(id, req);
 
     return rep.code(HttpStatusCode.OK).send({ ...objective });
 }

@@ -22,15 +22,22 @@ export interface Objectives {
   updatedAt: Generated<Timestamp>;
 }
 
+export interface UserObjectiveShares {
+  id: Generated<string>;
+  objectiveId: string;
+  userId: string;
+}
+
 export interface Users {
   email: string;
   id: Generated<string>;
   login: string;
   name: string;
-  password: string;
+  password: string | null;
 }
 
 export interface DB {
   objectives: Objectives;
+  "user-objective-shares": UserObjectiveShares;
   users: Users;
 }
