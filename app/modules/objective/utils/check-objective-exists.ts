@@ -8,7 +8,7 @@ export async function checkObjectiveExists(id: string) {
 
     if (!objective) {
         throw new CustomException(HttpStatusCode.NOT_FOUND, "Objective not found", {
-            publicMessage: "Задача не найдена"
+            publicMessage: "Objective not found"
         });
     }
     return objective;

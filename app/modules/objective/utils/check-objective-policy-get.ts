@@ -8,7 +8,7 @@ export async function checkObjectivePolicyGet(id: string, req: FastifyRequest) {
 
     if (objective.creatorId !== req.user.id) {
         throw new CustomException(HttpStatusCode.FORBIDDEN, "Access denied", {
-            publicMessage: "У вас нет доступа к этой задаче"
+            publicMessage: "You have no access to this objective"
         });
     }
     return objective;

@@ -8,7 +8,7 @@ export async function checkUniqueField(repositoryMethod: (sqlCon: any, value: st
         throw new CustomException(HttpStatusCode.CONFLICT, "Conflict", {
             type: HandlingErrorType.Unique,
             property,
-            publicMessage: `Поле ${property} должно быть уникальным.`
+            publicMessage: `Field ${property} must be unique.`
         });
     }
     return true;
