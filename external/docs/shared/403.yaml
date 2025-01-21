@@ -2,4 +2,12 @@ definitions:
   403:
     description: Forbidden
     content:
-      $ref: "#/definitions/app-error"
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "У вас нет доступа к этому ресурсу"
+          required:
+            - message

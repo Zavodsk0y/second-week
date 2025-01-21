@@ -2,4 +2,12 @@ definitions:
   404:
     description: Not found
     content:
-      $ref: "#/definitions/app-error"
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Ресурс не найден."
+          required:
+            - message

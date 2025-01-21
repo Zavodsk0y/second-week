@@ -2,4 +2,12 @@ definitions:
   409:
     description: Conflict
     content:
-      $ref: "#/definitions/app-error"
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Поле login должно быть уникальным."
+          required:
+            - message

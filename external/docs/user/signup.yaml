@@ -35,5 +35,7 @@
                   type: string
       404:
         $ref: "#/definitions/404"
+      409:
+        $ref: "#/definitions/409"
       422:
         $ref: "#/definitions/422"
