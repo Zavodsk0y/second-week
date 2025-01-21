@@ -1,10 +1,12 @@
-/to-do:
-  post:
+/to-do/{todoId}:
+  patch:
     tags:
       - Todo
-    summary: Create new Todo
+    summary: Update existing todo
     security:
       - bearer: [ ]
+    parameters:
+      - $ref: "#/definitions/uuid-param"
     requestBody:
       required: true
       content:
@@ -20,6 +22,8 @@
               notifyAt:
                 type: string
                 format: date-time
+              isCompleted:
+                type: boolean
     responses:
       '200':
         description: OK
@@ -58,3 +62,5 @@
         $ref: "#/definitions/422"
       401:
         $ref: "#/definitions/401"
+      403:
+        $ref: "#/definitions/403"

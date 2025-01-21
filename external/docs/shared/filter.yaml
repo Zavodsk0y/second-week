@@ -1,0 +1,9 @@
+definitions:
+  isCompleted:
+    in: query
+    name: isCompleted
+    description: Filter your todos with isCompleted field
+    required: false
+    schema:
+      type: boolean
+    example: true

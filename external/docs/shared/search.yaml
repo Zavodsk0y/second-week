@@ -1,0 +1,9 @@
+definitions:
+  search:
+    in: query
+    name: search
+    description: search todo with title
+    required: false
+    schema:
+      type: string
+    example: "Title of todo"

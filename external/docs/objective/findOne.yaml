@@ -4,16 +4,9 @@
       - Todo
     summary: Get one Todo
     security:
-      - bearerAuth: [ ]
+      - bearer: [ ]
     parameters:
-      - name: todoId
-        in: path
-        description: id of objective
-        required: true
-        schema:
-          type: string
-          format: uuid
-          example: "550e8400-e29b-41d4-a716-446655440000"
+      - $ref: "#/definitions/uuid-param"
     responses:
       '200':
         description: OK

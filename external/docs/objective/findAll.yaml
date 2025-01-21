@@ -1,0 +1,61 @@
+servers:
+  - url: /
+paths:
+  /to-do:
+    get:
+      tags:
+        - Todo
+      summary: Get all user's todos
+      security:
+        - bearer: [ ]
+      parameters:
+        - name: sortCreatedAt
+          $ref: "#/definitions/sortCreatedAt"
+        - name: sortNotifyAt
+          $ref: "#/definitions/sortNotifyAt"
+        - name: sortTitle
+          $ref: "#/definitions/sortTitle"
+        - name: search
+          $ref: "#/definitions/search"
+        - name: filter
+          $ref: "#/definitions/isCompleted"
+        - $ref: "#/definitions/pagination/limit"
+        - $ref: "#/definitions/pagination/offset"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    title:
+                      type: string
+                      minLength: 1
+                      maxLength: 127
+                    description:
+                      type: string
+                    creatorId:
+                      type: string
+                    notifyAt:
+                      type: string
+                      format: date-time
+                    createdAt:
+                      type: string
+                      format: date-time
+                      default: "2025-01-20T06:13:43Z"
+                    updatedAt:
+                      type: string
+                      format: date-time
+                      default: "2025-01-20T06:13:43Z"
+                    isCompleted:
+                      type: boolean
+                      default: false
+        '404':
+          $ref: "#/definitions/404"
+        '401':
+          $ref: "#/definitions/401"
