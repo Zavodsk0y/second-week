@@ -7,7 +7,7 @@ export async function up(db: Kysely<any>) {
         .addColumn("login", "varchar(127)", (col) => col.unique().notNull())
         .addColumn("name", "varchar(12)", (col) => col.notNull())
         .addColumn("email", "varchar(127)", (col) => col.unique().notNull())
-        .addColumn("password", "text")
+        .addColumn("password", "text", (col) => col.notNull())
         .execute();
 }
 

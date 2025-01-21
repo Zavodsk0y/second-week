@@ -27,7 +27,7 @@ export interface Users {
   id: Generated<string>;
   login: string;
   name: string;
-  password: string | null;
+  password: string;
 }
 
 export interface DB {
