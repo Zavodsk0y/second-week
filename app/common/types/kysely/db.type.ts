@@ -25,7 +25,8 @@ export interface Objectives {
 export interface Users {
   email: string;
   id: Generated<string>;
-  name: string | null;
+  login: string;
+  name: string;
   password: string | null;
 }
 
