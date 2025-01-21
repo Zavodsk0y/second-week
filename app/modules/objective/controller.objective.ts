@@ -21,13 +21,7 @@ export async function create(req: FastifyRequest<{ Body: createObjectiveSchema }
     return rep.code(HttpStatusCode.CREATED).send({ ...insertedObjective });
 }
 
-export async function update(
-    req: FastifyRequest<{
-        Body: updateObjectiveSchema;
-        Params: uuidObjectiveSchema;
-    }>,
-    rep: FastifyReply
-) {
+export async function update(req: FastifyRequest<{ Body: updateObjectiveSchema; Params: uuidObjectiveSchema }>, rep: FastifyReply) {
     const { id } = req.params;
 
     await checkObjectivePolicyGet(id, req);
