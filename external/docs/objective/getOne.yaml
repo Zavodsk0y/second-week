@@ -1,5 +1,5 @@
 /to-do/{todoId}:
-  post:
+  get:
     tags:
       - Todo
     summary: Get one Todo
