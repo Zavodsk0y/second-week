@@ -35,7 +35,37 @@ export async function create(req: FastifyRequest<{ Body: createUserObjectiveShar
     });
 
     return rep.code(HttpStatusCode.CREATED).send({
-        message: "You have successfully shared a task with a user",
+        message: "You've successfully shared a task with a user",
+        user: {
+            email: user.email,
+            name: user.name
+        },
+        objective: objective
+    });
+}
+
+export async function revoke(req: FastifyRequest<{ Body: createUserObjectiveShareSchema; Params: uuidObjectiveSchema }>, rep: FastifyReply) {
+    const { id } = req.params;
+
+    const objective = await checkObjectivePolicyGet(id, req);
+
+    const user = await getUserByEmail(req.body.email);
+
+    const data = {
+        userId: user.id,
+        objectiveId: objective.id
+    };
+
+    if (!(await userObjectiveShareRepository.findAccessByUserAndObjective(sqlCon, user.id, objective.id))) {
+        throw new CustomException(HttpStatusCode.CONFLICT, "Sharing doesn't exist", {
+            publicMessage: "Sharing doesn't exist"
+        });
+    }
+    await userObjectiveShareRepository.remove(sqlCon, data);
+
+    // TODO: return all users that have access to this objective
+    return rep.code(HttpStatusCode.CREATED).send({
+        message: "You've successfully revoked access",
         user: {
             email: user.email,
             name: user.name

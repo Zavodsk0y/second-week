@@ -10,3 +10,7 @@ export async function insert(con: Kysely<DB> | Transaction<DB>, entity: Insertab
 export async function findAccessByUserAndObjective(con: Kysely<DB> | Transaction<DB>, userId: string, objectiveId: string) {
     return await con.selectFrom("user-objective-shares").selectAll().where("userId", "=", userId).where("objectiveId", "=", objectiveId).executeTakeFirst();
 }
+
+export async function remove(con: Kysely<DB> | Transaction<DB>, entity: InsertableUserObjectiveSharesRowType) {
+    return await con.deleteFrom("user-objective-shares").where("userId", "=", entity.userId).where("objectiveId", "=", entity.objectiveId).executeTakeFirst();
+}
