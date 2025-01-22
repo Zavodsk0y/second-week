@@ -88,7 +88,7 @@ export async function revoke(req: FastifyRequest<{ Body: createUserObjectiveShar
 }
 
 export async function getShared(req: FastifyRequest, rep: FastifyReply) {
-    const sharedObjectives = await userObjectiveShareRepository.findAccessesById(sqlCon, req.user.id!);
+    const sharedObjectives = await userObjectiveShareRepository.findAccessesByUserId(sqlCon, req.user.id!);
 
     return rep.code(HttpStatusCode.OK).send(sharedObjectives);
 }

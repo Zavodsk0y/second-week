@@ -15,7 +15,7 @@ export async function remove(con: Kysely<DB> | Transaction<DB>, entity: Insertab
     return await con.deleteFrom("user-objective-shares").where("userId", "=", entity.userId).where("objectiveId", "=", entity.objectiveId).executeTakeFirst();
 }
 
-export async function findAccessesById(con: Kysely<DB> | Transaction<DB>, userId: string) {
+export async function findAccessesByUserId(con: Kysely<DB> | Transaction<DB>, userId: string) {
     return await con
         .selectFrom("user-objective-shares")
         .innerJoin("objectives", "objectives.id", "user-objective-shares.objectiveId")
