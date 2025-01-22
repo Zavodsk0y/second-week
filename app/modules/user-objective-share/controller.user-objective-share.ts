@@ -20,11 +20,18 @@ export async function create(req: FastifyRequest<{ Body: createUserObjectiveShar
         objectiveId: objective.id
     };
 
+    if (user.id === req.user.id) {
+        throw new CustomException(HttpStatusCode.CONFLICT, "You're trying to grant access on your objective", {
+            publicMessage: "You're trying to grant access on your objective"
+        });
+    }
+
     if ((await userObjectiveShareRepository.findAccessByUserAndObjective(sqlCon, user.id, objective.id)) !== undefined) {
         throw new CustomException(HttpStatusCode.CONFLICT, "Share already exists", {
             publicMessage: "Share already exists"
         });
     }
+
     await userObjectiveShareRepository.insert(sqlCon, data);
 
     req.server.mailer.sendMail({
@@ -56,6 +63,12 @@ export async function revoke(req: FastifyRequest<{ Body: createUserObjectiveShar
         objectiveId: objective.id
     };
 
+    if (user.id === req.user.id) {
+        throw new CustomException(HttpStatusCode.CONFLICT, "You are trying to revoke access from yourself", {
+            publicMessage: "You are trying to revoke access from yourself"
+        });
+    }
+
     if (!(await userObjectiveShareRepository.findAccessByUserAndObjective(sqlCon, user.id, objective.id))) {
         throw new CustomException(HttpStatusCode.CONFLICT, "Sharing doesn't exist", {
             publicMessage: "Sharing doesn't exist"
@@ -72,4 +85,10 @@ export async function revoke(req: FastifyRequest<{ Body: createUserObjectiveShar
         },
         objective: objective
     });
+}
+
+export async function getShared(req: FastifyRequest, rep: FastifyReply) {
+    const sharedObjectives = await userObjectiveShareRepository.findAccessesById(sqlCon, req.user.id!);
+
+    return rep.code(HttpStatusCode.OK).send(sharedObjectives);
 }

@@ -14,3 +14,13 @@ export async function findAccessByUserAndObjective(con: Kysely<DB> | Transaction
 export async function remove(con: Kysely<DB> | Transaction<DB>, entity: InsertableUserObjectiveSharesRowType) {
     return await con.deleteFrom("user-objective-shares").where("userId", "=", entity.userId).where("objectiveId", "=", entity.objectiveId).executeTakeFirst();
 }
+
+export async function findAccessesById(con: Kysely<DB> | Transaction<DB>, userId: string) {
+    return await con
+        .selectFrom("user-objective-shares")
+        .innerJoin("objectives", "objectives.id", "user-objective-shares.objectiveId")
+        .innerJoin("users", "users.id", "objectives.creatorId")
+        .select(["users.email", "objectives.title", "objectives.description", "objectives.isCompleted", "objectives.notifyAt"])
+        .where("user-objective-shares.userId", "=", userId)
+        .execute();
+}
