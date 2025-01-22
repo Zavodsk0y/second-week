@@ -1,6 +1,7 @@
-import type { FastifyReply, FastifyRequest } from "fastify";
+import { FastifyReply, FastifyRequest } from "fastify";
 import { sqlCon } from "../../common/config/kysely-config";
 import { HttpStatusCode } from "../../common/enum/http-status-code";
+import { CustomException } from "../../common/exceptions/custom-exception";
 import { uuidObjectiveSchema } from "../../common/schemas/uuid-objective.schema";
 import { checkObjectivePolicyGet } from "../objective/utils/check-objective-policy-get";
 import { getUserByEmail } from "../user/utils/get-user-by-email";
@@ -19,7 +20,19 @@ export async function create(req: FastifyRequest<{ Body: createUserObjectiveShar
         objectiveId: objective.id
     };
 
+    if ((await userObjectiveShareRepository.findAccessByUserAndObjective(sqlCon, user.id, objective.id)) !== undefined) {
+        throw new CustomException(HttpStatusCode.CONFLICT, "Share already exists", {
+            publicMessage: "Share already exists"
+        });
+    }
     await userObjectiveShareRepository.insert(sqlCon, data);
+
+    req.server.mailer.sendMail({
+        to: req.body.email,
+        subject: `User Objective Share`,
+        text: `User has shared objective with you! 
+        Objective: ${JSON.stringify(objective)}`
+    });
 
     return rep.code(HttpStatusCode.CREATED).send({
         message: "You have successfully shared a task with a user",
