@@ -64,7 +64,7 @@ export async function revoke(req: FastifyRequest<{ Body: createUserObjectiveShar
     await userObjectiveShareRepository.remove(sqlCon, data);
 
     // TODO: return all users that have access to this objective
-    return rep.code(HttpStatusCode.CREATED).send({
+    return rep.code(HttpStatusCode.OK).send({
         message: "You've successfully revoked access",
         user: {
             email: user.email,
