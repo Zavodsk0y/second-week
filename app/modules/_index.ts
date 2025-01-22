@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { objectiveRouter } from "./objective/router.objective";
+import { userObjectiveShareRouter } from "./user-objective-share/router.user-objective-share";
 import { userRouter } from "./user/router.user";
 
 interface IProvider {
@@ -9,5 +10,6 @@ interface IProvider {
 
 export const HttpProvider: IProvider[] = [
     { instance: userRouter, prefix: "user" },
-    { instance: objectiveRouter, prefix: "" }
+    { instance: objectiveRouter, prefix: "" },
+    { instance: userObjectiveShareRouter, prefix: "" }
 ];

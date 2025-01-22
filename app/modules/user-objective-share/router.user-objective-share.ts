@@ -1,0 +1,13 @@
+import type { FastifyInstance } from "fastify";
+import * as userObjectiveShareController from "./controller.user-objective-share";
+import { createuserObjectiveShareFSchema } from "./schemas/create-user-objective-share.schema";
+
+export const userObjectiveShareRouter = async (app: FastifyInstance) => {
+    app.post(
+        "/to-do/:id/accesses",
+        {
+            schema: createuserObjectiveShareFSchema
+        },
+        userObjectiveShareController.create
+    );
+};
