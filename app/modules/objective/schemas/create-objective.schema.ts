@@ -9,3 +9,7 @@ const schema = z.object({
 
 export type createObjectiveSchema = z.infer<typeof schema>;
 export const createObjectiveFSchema: FastifySchema = { body: schema };
+
+export interface ICreateObjectiveFSchema {
+    Body: createObjectiveSchema;
+}

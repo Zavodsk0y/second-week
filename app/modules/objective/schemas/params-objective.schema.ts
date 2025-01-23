@@ -15,3 +15,7 @@ const schema = z.object({
 
 export type paramsObjectiveSchema = z.infer<typeof schema>;
 export const paramsObjectiveFSchema: FastifySchema = { querystring: schema };
+
+export interface IQueryParamsFSchema {
+    Querystring: paramsObjectiveSchema;
+}

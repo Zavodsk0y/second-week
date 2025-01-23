@@ -1,14 +1,14 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { sqlCon } from "../../common/config/kysely-config";
 import { HttpStatusCode } from "../../common/enum/http-status-code";
-import { uuidSchema } from "../../common/schemas/uuid.schema";
+import { IGetByUuidFSchema } from "../../common/schemas/uuid.schema";
 import * as objectiveRepository from "./repository.objective";
-import { createObjectiveSchema } from "./schemas/create-objective.schema";
-import { paramsObjectiveSchema } from "./schemas/params-objective.schema";
-import { updateObjectiveSchema } from "./schemas/update-objective.schema";
+import { ICreateObjectiveFSchema } from "./schemas/create-objective.schema";
+import { IQueryParamsFSchema } from "./schemas/params-objective.schema";
+import { IUpdateObjectiveFSchema } from "./schemas/update-objective.schema";
 import { checkObjectiveExists } from "./utils/check-objective-exists";
 
-export async function create(req: FastifyRequest<{ Body: createObjectiveSchema }>, rep: FastifyReply) {
+export async function create(req: FastifyRequest<ICreateObjectiveFSchema>, rep: FastifyReply) {
     const objective = {
         title: req.body.title,
         description: req.body.description,
@@ -21,13 +21,7 @@ export async function create(req: FastifyRequest<{ Body: createObjectiveSchema }
     return rep.code(HttpStatusCode.CREATED).send({ ...insertedObjective });
 }
 
-export async function update(
-    req: FastifyRequest<{
-        Body: updateObjectiveSchema;
-        Params: uuidSchema;
-    }>,
-    rep: FastifyReply
-) {
+export async function update(req: FastifyRequest<IUpdateObjectiveFSchema>, rep: FastifyReply) {
     const { id } = req.params;
 
     const updatedObject = await objectiveRepository.update(sqlCon, id, req.body);
@@ -35,7 +29,7 @@ export async function update(
     return rep.code(HttpStatusCode.OK).send({ ...updatedObject });
 }
 
-export async function findOne(req: FastifyRequest<{ Params: uuidSchema }>, rep: FastifyReply) {
+export async function findOne(req: FastifyRequest<IGetByUuidFSchema>, rep: FastifyReply) {
     const { id } = req.params;
 
     const objective = await checkObjectiveExists(id);
@@ -43,7 +37,7 @@ export async function findOne(req: FastifyRequest<{ Params: uuidSchema }>, rep: 
     return rep.code(HttpStatusCode.OK).send({ ...objective });
 }
 
-export async function findAll(req: FastifyRequest<{ Querystring: paramsObjectiveSchema }>, rep: FastifyReply) {
+export async function findAll(req: FastifyRequest<IQueryParamsFSchema>, rep: FastifyReply) {
     const objectives = await objectiveRepository.getAll(sqlCon, req.user.id!, req.query);
 
     return rep.code(HttpStatusCode.OK).send(objectives);

@@ -1,9 +1,13 @@
 import { FastifySchema } from "fastify";
 import { z } from "zod";
 
-const schema = z.object({
+const paramsSchema = z.object({
     id: z.string().uuid()
 });
 
-export type uuidSchema = z.TypeOf<typeof schema>;
-export const uuidFSchema: FastifySchema = { params: schema };
+export type uuidSchema = z.TypeOf<typeof paramsSchema>;
+export const uuidFSchema: FastifySchema = { params: paramsSchema };
+
+export interface IGetByUuidFSchema {
+    Params: uuidSchema;
+}
