@@ -27,6 +27,7 @@
               properties:
                 id:
                   type: string
+                  format: uuid
                 accessToken:
                   type: string
       404:

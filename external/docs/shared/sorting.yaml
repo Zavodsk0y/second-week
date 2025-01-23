@@ -1,24 +1,17 @@
 definitions:
-  sortCreatedAt:
-    name: sortCreatedAt
+  orderBy:
+    name: orderBy
     in: query
-    description: Sort todos with createdAt field
+    description: Define a field that you want order by
     required: false
     schema:
       type: string
-      enum: [ "asc", "desc" ]
-  sortTitle:
-    name: sortTitle
+      enum: [ "createdAt", "notifyAt", "title" ]
+
+  orderDirection:
+    name: orderDirection
     in: query
-    description: Sort todos with title field
-    required: false
-    schema:
-      type: string
-      enum: [ "asc", "desc" ]
-  sortNotifyAt:
-    name: sortNotifyAt
-    in: query
-    description: Sort todos with notifyAt field
+    description: Define orderBy direction
     required: false
     schema:
       type: string

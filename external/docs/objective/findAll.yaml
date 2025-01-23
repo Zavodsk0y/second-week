@@ -9,12 +9,10 @@ paths:
       security:
         - bearer: [ ]
       parameters:
-        - name: sortCreatedAt
-          $ref: "#/definitions/sortCreatedAt"
-        - name: sortNotifyAt
-          $ref: "#/definitions/sortNotifyAt"
-        - name: sortTitle
-          $ref: "#/definitions/sortTitle"
+        - name: orderBy
+          $ref: "#/definitions/orderBy"
+        - name: orderDirection
+          $ref: "#/definitions/orderDirection"
         - name: search
           $ref: "#/definitions/search"
         - name: filter
@@ -33,6 +31,7 @@ paths:
                   properties:
                     id:
                       type: string
+                      format: uuid
                     title:
                       type: string
                       minLength: 1

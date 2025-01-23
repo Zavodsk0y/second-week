@@ -4,7 +4,7 @@ definitions:
       in: query
       name: limit
       description: limit count
-      required: false
+      required: true
       schema:
         type: integer
       example: 100
@@ -13,7 +13,7 @@ definitions:
       in: query
       name: offset
       description: page index
-      required: false
+      required: true
       schema:
         type: false
       example: 0
