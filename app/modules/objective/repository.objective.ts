@@ -19,11 +19,9 @@ export async function getAll(con: Kysely<DB> | Transaction<DB>, userId: string, 
     query = query
         .$if(Boolean(filters?.isCompleted), (q) => q.where("isCompleted", "=", filters.isCompleted!))
         .$if(Boolean(filters?.search), (q) => q.where("title", "like", `%${filters.search}%`))
-        .$if(Boolean(filters?.sortCreatedAt), (q) => q.orderBy("createdAt", filters.sortCreatedAt))
-        .$if(Boolean(filters?.sortNotifyAt), (q) => q.orderBy("notifyAt", filters.sortNotifyAt))
-        .$if(Boolean(filters?.sortTitle), (q) => q.orderBy("title", filters.sortTitle))
-        .$if(Boolean(filters?.limit), (q) => q.limit(filters.limit!))
-        .$if(Boolean(filters?.offset), (q) => q.offset(filters.offset!));
+        .$if(Boolean(filters?.orderBy && filters?.orderDirection), (q) => q.orderBy(filters.orderBy!, filters.orderDirection))
+        .limit(filters.limit)
+        .offset(filters.offset);
     return await query.execute();
 }
 
