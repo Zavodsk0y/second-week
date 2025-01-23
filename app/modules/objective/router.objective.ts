@@ -6,8 +6,8 @@ import { paramsObjectiveFSchema } from "./schemas/params-objective.schema";
 import { updateObjectiveFSchema } from "./schemas/update-objective.schema";
 
 export const objectiveRouter = async (app: FastifyInstance) => {
-    app.post("/to-do", { schema: createObjectiveFSchema }, objectiveController.create);
-    app.get("/to-do/:id", { schema: uuidObjectiveFSchema }, objectiveController.findOne);
-    app.get("/to-do", { schema: paramsObjectiveFSchema }, objectiveController.findAll);
-    app.patch("/to-do/:id", { schema: updateObjectiveFSchema }, objectiveController.update);
+    app.post("/", { schema: createObjectiveFSchema }, objectiveController.create);
+    app.get("/:id", { schema: uuidObjectiveFSchema }, objectiveController.findOne);
+    app.get("/", { schema: paramsObjectiveFSchema }, objectiveController.findAll);
+    app.patch("/:id", { schema: updateObjectiveFSchema }, objectiveController.update);
 };
