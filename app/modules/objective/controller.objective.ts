@@ -6,7 +6,7 @@ import * as objectiveRepository from "./repository.objective";
 import { createObjectiveSchema } from "./schemas/create-objective.schema";
 import { paramsObjectiveSchema } from "./schemas/params-objective.schema";
 import { updateObjectiveSchema } from "./schemas/update-objective.schema";
-import { checkObjectivePolicyGet } from "./utils/check-objective-policy-get";
+import { checkObjectiveExists } from "./utils/check-objective-exists";
 
 export async function create(req: FastifyRequest<{ Body: createObjectiveSchema }>, rep: FastifyReply) {
     const objective = {
@@ -21,10 +21,14 @@ export async function create(req: FastifyRequest<{ Body: createObjectiveSchema }
     return rep.code(HttpStatusCode.CREATED).send({ ...insertedObjective });
 }
 
-export async function update(req: FastifyRequest<{ Body: updateObjectiveSchema; Params: uuidSchema }>, rep: FastifyReply) {
+export async function update(
+    req: FastifyRequest<{
+        Body: updateObjectiveSchema;
+        Params: uuidSchema;
+    }>,
+    rep: FastifyReply
+) {
     const { id } = req.params;
-
-    await checkObjectivePolicyGet(id, req);
 
     const updatedObject = await objectiveRepository.update(sqlCon, id, req.body);
 
@@ -34,7 +38,7 @@ export async function update(req: FastifyRequest<{ Body: updateObjectiveSchema; 
 export async function findOne(req: FastifyRequest<{ Params: uuidSchema }>, rep: FastifyReply) {
     const { id } = req.params;
 
-    const objective = await checkObjectivePolicyGet(id, req);
+    const objective = await checkObjectiveExists(id);
 
     return rep.code(HttpStatusCode.OK).send({ ...objective });
 }

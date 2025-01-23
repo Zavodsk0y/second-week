@@ -1,3 +1,4 @@
+import { fastifyAuth } from "@fastify/auth";
 import { fastifyCors } from "@fastify/cors";
 import { fastifyJwt } from "@fastify/jwt";
 import { fastifySwagger } from "@fastify/swagger";
@@ -31,6 +32,7 @@ async function app() {
     await app.register(KyselyConfig);
     await app.register(fastifyJwt, jwtOption);
     await app.register(fastifyMailer, mailerOption);
+    await app.register(fastifyAuth);
     await globalAuthHook(app);
 
     HttpProvider.forEach((router) => app.register(router.instance, { prefix: router.prefix }));
