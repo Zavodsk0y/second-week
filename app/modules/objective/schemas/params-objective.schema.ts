@@ -9,8 +9,8 @@ const schema = z.object({
     sortCreatedAt: SortOrders.optional(),
     sortTitle: SortOrders.optional(),
     sortNotifyAt: SortOrders.optional(),
-    limit: z.number().optional(),
-    offset: z.number().optional()
+    limit: z.number(),
+    offset: z.number()
 });
 
 export type paramsObjectiveSchema = z.infer<typeof schema>;
