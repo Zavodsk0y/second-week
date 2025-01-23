@@ -6,7 +6,10 @@ const SortFields = z.enum(["notifyAt", "createdAt", "title"]);
 
 const schema = z.object({
     search: z.string().optional(),
-    isCompleted: z.boolean().optional(),
+    isCompleted: z
+        .enum(["true", "false"])
+        .transform((val) => val === "true")
+        .optional(),
     orderBy: SortFields.optional(),
     orderDirection: SortOrders.optional(),
     limit: z.string().transform(Number),
