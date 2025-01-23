@@ -12,5 +12,4 @@ export async function checkObjectivePolicyGet(req: FastifyRequest<{ Params: uuid
             publicMessage: "You have no access to this objective"
         });
     }
-    return objective;
 }

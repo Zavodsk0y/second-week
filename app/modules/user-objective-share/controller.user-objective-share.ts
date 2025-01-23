@@ -2,24 +2,17 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { sqlCon } from "../../common/config/kysely-config";
 import { HttpStatusCode } from "../../common/enum/http-status-code";
 import { CustomException } from "../../common/exceptions/custom-exception";
-import { uuidSchema } from "../../common/schemas/uuid.schema";
 import { checkObjectiveExists } from "../objective/utils/check-objective-exists";
-import { getUserByEmail } from "../user/utils/get-user-by-email";
+import { getUserById } from "../user/utils/get-user-by-id";
 import * as userObjectiveShareRepository from "./repository.user-objective-share";
-import { createUserObjectiveShareSchema } from "./schemas/create-user-objective-share.schema";
+import { IUserObjectiveShareFSchema } from "./schemas/create-user-objective-share.schema";
 
-export async function create(
-    req: FastifyRequest<{
-        Body: createUserObjectiveShareSchema;
-        Params: uuidSchema;
-    }>,
-    rep: FastifyReply
-) {
+export async function create(req: FastifyRequest<IUserObjectiveShareFSchema>, rep: FastifyReply) {
     const { id } = req.params;
 
     const objective = await checkObjectiveExists(id);
 
-    const user = await getUserByEmail(req.body.email);
+    const user = await getUserById(req.body.id);
 
     const data = {
         userId: user.id,
@@ -41,7 +34,7 @@ export async function create(
     await userObjectiveShareRepository.insert(sqlCon, data);
 
     req.server.mailer.sendMail({
-        to: req.body.email,
+        to: user.email,
         subject: `User Objective Share`,
         text: `User has shared objective with you! 
         Objective: ${JSON.stringify(objective)}`
@@ -57,18 +50,12 @@ export async function create(
     });
 }
 
-export async function revoke(
-    req: FastifyRequest<{
-        Body: createUserObjectiveShareSchema;
-        Params: uuidSchema;
-    }>,
-    rep: FastifyReply
-) {
+export async function revoke(req: FastifyRequest<IUserObjectiveShareFSchema>, rep: FastifyReply) {
     const { id } = req.params;
 
     const objective = await checkObjectiveExists(id);
 
-    const user = await getUserByEmail(req.body.email);
+    const user = await getUserById(req.body.id);
 
     const data = {
         userId: user.id,
