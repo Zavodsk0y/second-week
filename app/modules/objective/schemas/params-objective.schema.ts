@@ -12,8 +12,14 @@ const schema = z.object({
         .optional(),
     orderBy: SortFields.optional(),
     orderDirection: SortOrders.optional(),
-    limit: z.string().transform(Number),
-    offset: z.string().transform(Number)
+    limit: z
+        .string()
+        .transform((val) => Number(val))
+        .refine((val) => !isNaN(val)),
+    offset: z
+        .string()
+        .transform((val) => Number(val))
+        .refine((val) => !isNaN(val))
 });
 
 export type paramsObjectiveSchema = z.infer<typeof schema>;
