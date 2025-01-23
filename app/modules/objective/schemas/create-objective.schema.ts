@@ -3,7 +3,7 @@ import { z } from "zod";
 
 const schema = z.object({
     title: z.string().min(1).max(127),
-    description: z.string().nullable(),
+    description: z.string().nullable().optional(),
     notifyAt: z.string().datetime().nullable().optional()
 });
 

@@ -10,10 +10,8 @@ import { checkObjectiveExists } from "./utils/check-objective-exists";
 
 export async function create(req: FastifyRequest<ICreateObjectiveFSchema>, rep: FastifyReply) {
     const objective = {
-        title: req.body.title,
-        description: req.body.description,
-        creatorId: req.user.id!,
-        notifyAt: req.body.notifyAt
+        ...req.body,
+        creatorId: req.user.id!
     };
 
     const insertedObjective = await objectiveRepository.insert(sqlCon, objective);
