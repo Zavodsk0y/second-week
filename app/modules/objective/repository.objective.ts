@@ -19,7 +19,7 @@ export async function getAll(con: Kysely<DB> | Transaction<DB>, userId: string, 
 
     const eb = expressionBuilder<DB, "objectives">();
     if (filters.isCompleted !== undefined) conditions.push(eb("objectives.isCompleted", "=", filters.isCompleted));
-    if (filters.search !== undefined) conditions.push(eb("objectives.title", "like", `%${filters.search}%`));
+    if (filters.search !== undefined) conditions.push(eb("objectives.title", "ilike", `%${filters.search}%`));
 
     query = query
         .where((eb) => eb.and(conditions))
