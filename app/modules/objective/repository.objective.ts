@@ -14,19 +14,27 @@ export async function findAll(con: Kysely<DB> | Transaction<DB>, userId: string)
 }
 
 export async function getAll(con: Kysely<DB> | Transaction<DB>, userId: string, filters: paramsObjectiveSchema) {
-    let query = con.selectFrom("objectives").selectAll().where("creatorId", "=", userId);
+    const query = con.selectFrom("objectives").where("creatorId", "=", userId);
     const conditions: Array<ExpressionWrapper<DB, "objectives", SqlBool> | RawBuilder<any>> = [];
 
     const eb = expressionBuilder<DB, "objectives">();
     if (filters.isCompleted !== undefined) conditions.push(eb("objectives.isCompleted", "=", filters.isCompleted));
     if (filters.search !== undefined) conditions.push(eb("objectives.title", "ilike", `%${filters.search}%`));
 
-    query = query
+    const totalCountQuery = await query
+        .select((eb) => eb.fn.countAll().as("total"))
+        .where((eb) => eb.and(conditions))
+        .executeTakeFirstOrThrow();
+
+    const dataQuery = await query
+        .selectAll()
         .where((eb) => eb.and(conditions))
         .orderBy(filters.orderBy, filters.orderDirection)
         .limit(filters.limit)
-        .offset(filters.offset);
-    return await query.execute();
+        .offset(filters.offset)
+        .execute();
+
+    return { data: dataQuery, total: totalCountQuery };
 }
 
 export async function getById(con: Kysely<DB> | Transaction<DB>, id: string) {

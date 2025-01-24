@@ -38,5 +38,5 @@ export async function findOne(req: FastifyRequest<IGetByUuidFSchema>, rep: Fasti
 export async function findAll(req: FastifyRequest<IQueryParamsFSchema>, rep: FastifyReply) {
     const objectives = await objectiveRepository.getAll(sqlCon, req.user.id!, req.query);
 
-    return rep.code(HttpStatusCode.OK).send(objectives);
+    return rep.code(HttpStatusCode.OK).send({ body: objectives.data, ...objectives.total });
 }
