@@ -23,7 +23,7 @@ export async function getAll(con: Kysely<DB> | Transaction<DB>, userId: string, 
 
     query = query
         .where((eb) => eb.and(conditions))
-        .$if(Boolean(filters?.orderBy && filters?.orderDirection), (q) => q.orderBy(filters.orderBy!, filters.orderDirection))
+        .orderBy(filters.orderBy, filters.orderDirection)
         .limit(filters.limit)
         .offset(filters.offset);
     return await query.execute();

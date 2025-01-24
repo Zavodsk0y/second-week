@@ -10,16 +10,10 @@ const schema = z.object({
         .enum(["true", "false"])
         .transform((val) => val === "true")
         .optional(),
-    orderBy: SortFields.optional(),
-    orderDirection: SortOrders.optional(),
-    limit: z
-        .string()
-        .transform((val) => Number(val))
-        .refine((val) => !isNaN(val)),
-    offset: z
-        .string()
-        .transform((val) => Number(val))
-        .refine((val) => !isNaN(val))
+    orderBy: SortFields.optional().default("createdAt"),
+    orderDirection: SortOrders.optional().default("asc"),
+    limit: z.coerce.number(),
+    offset: z.coerce.number()
 });
 
 export type paramsObjectiveSchema = z.infer<typeof schema>;
