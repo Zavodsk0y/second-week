@@ -8,11 +8,11 @@ import * as userObjectiveShareRepository from "./repository.user-objective-share
 import { IUserObjectiveShareFSchema } from "./schemas/create-user-objective-share.schema";
 
 export async function create(req: FastifyRequest<IUserObjectiveShareFSchema>, rep: FastifyReply) {
-    const { id } = req.params;
+    const { id, userId } = req.params;
 
     const objective = await checkObjectiveExists(id);
 
-    const user = await getUserById(req.body.id);
+    const user = await getUserById(userId);
 
     const data = {
         userId: user.id,
@@ -51,11 +51,11 @@ export async function create(req: FastifyRequest<IUserObjectiveShareFSchema>, re
 }
 
 export async function revoke(req: FastifyRequest<IUserObjectiveShareFSchema>, rep: FastifyReply) {
-    const { id } = req.params;
+    const { id, userId } = req.params;
 
     const objective = await checkObjectiveExists(id);
 
-    const user = await getUserById(req.body.id);
+    const user = await getUserById(userId);
 
     const data = {
         userId: user.id,
