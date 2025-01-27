@@ -24,3 +24,12 @@ export async function findAccessesByUserId(con: Kysely<DB> | Transaction<DB>, us
         .where("user-objective-shares.userId", "=", userId)
         .execute();
 }
+
+export async function findGrantedUsersByObjectiveId(con: Kysely<DB> | Transaction<DB>, objectiveId: string) {
+    return await con
+        .selectFrom("user-objective-shares")
+        .innerJoin("users", "users.id", "user-objective-shares.userId")
+        .select(["users.id", "users.login", "users.name"])
+        .where("user-objective-shares.objectiveId", "=", objectiveId)
+        .execute();
+}
