@@ -20,7 +20,16 @@ export async function findAccessesByUserId(con: Kysely<DB> | Transaction<DB>, us
         .selectFrom("user-objective-shares")
         .innerJoin("objectives", "objectives.id", "user-objective-shares.objectiveId")
         .innerJoin("users", "users.id", "objectives.creatorId")
-        .select(["users.email", "objectives.title", "objectives.description", "objectives.isCompleted", "objectives.notifyAt"])
+        .select([
+            "users.id as userId",
+            "users.login",
+            "users.name",
+            "objectives.id as objectiveId",
+            "objectives.title",
+            "objectives.description",
+            "objectives.isCompleted",
+            "objectives.notifyAt"
+        ])
         .where("user-objective-shares.userId", "=", userId)
         .execute();
 }
