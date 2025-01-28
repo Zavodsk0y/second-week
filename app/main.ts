@@ -32,7 +32,7 @@ async function app() {
     await app.register(KyselyConfig);
     await app.register(fastifyJwt, jwtOption);
     await app.register(fastifyMailer, mailerOption);
-    await app.register(fastifyAuth);
+    await app.register(fastifyAuth, { defaultRelation: "or" });
     await globalAuthHook(app);
 
     HttpProvider.forEach((router) => app.register(router.instance, { prefix: router.prefix }));

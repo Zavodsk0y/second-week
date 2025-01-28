@@ -9,7 +9,7 @@ import { updateObjectiveFSchema } from "./schemas/update-objective.schema";
 
 export const objectiveRouter = async (app: FastifyInstance) => {
     app.post("/", { schema: createObjectiveFSchema }, objectiveController.create);
-    app.get("/:id", { schema: uuidFSchema, preHandler: app.auth([checkSharingPolicy]) }, objectiveController.findOne);
+    app.get("/:id", { schema: uuidFSchema, preHandler: app.auth([checkObjectivePolicyGet, checkSharingPolicy]) }, objectiveController.findOne);
     app.get("/", { schema: paramsObjectiveFSchema }, objectiveController.findAll);
     app.patch("/:id", { schema: updateObjectiveFSchema, preHandler: app.auth([checkObjectivePolicyGet]) }, objectiveController.update);
     app.delete("/:id", { schema: uuidFSchema, preHandler: app.auth([checkObjectivePolicyGet]) }, objectiveController.remove);

@@ -3,9 +3,8 @@ import { sqlCon } from "../../common/config/kysely-config";
 import { HttpStatusCode } from "../../common/enum/http-status-code";
 import { CustomException } from "../../common/exceptions/custom-exception";
 import { IGetByUuidFSchema } from "../../common/schemas/uuid.schema";
-import { Users } from "../../common/types/kysely/db.type";
 import { checkObjectiveExists } from "../objective/utils/check-objective-exists";
-import { getUserById } from "../user/utils/get-user-by-id";
+import * as userRepository from "../user/repository.user";
 import * as userObjectiveShareRepository from "./repository.user-objective-share";
 import { IUserObjectiveShareFSchema } from "./schemas/user-objective-share.schema";
 
@@ -14,12 +13,10 @@ export async function create(req: FastifyRequest<IUserObjectiveShareFSchema>, re
 
     const objective = await checkObjectiveExists(id);
 
-    const usersIds = req.body.users;
+    const usersIds = req.body.users.map((user) => user.id);
 
-    const users: Users[] = [];
-
-    const ownerIsAddingYourself = usersIds.some((user) => {
-        return user.id === req.user.id;
+    const ownerIsAddingYourself = usersIds.some((userId) => {
+        return userId === req.user.id;
     });
 
     if (ownerIsAddingYourself) {
@@ -28,15 +25,18 @@ export async function create(req: FastifyRequest<IUserObjectiveShareFSchema>, re
         });
     }
 
-    for (const user of usersIds) {
-        const checkedUser = await getUserById(user.id);
-        if ((await userObjectiveShareRepository.findAccessByUserAndObjective(sqlCon, user.id, objective.id)) !== undefined) {
-            throw new CustomException(HttpStatusCode.CONFLICT, "Sharing already exists", {
-                publicMessage: { message: "Sharing already exists for this user", userId: user.id }
-            });
-        }
-        users.push(checkedUser);
+    const existingShares = await userObjectiveShareRepository.findAccessesByUsersAndObjective(sqlCon, usersIds, objective.id);
+
+    if (existingShares.length > 0) {
+        throw new CustomException(HttpStatusCode.CONFLICT, "Sharing already exists", {
+            publicMessage: {
+                message: "Sharings already exist for these users",
+                usersIds: existingShares.map((user) => user.userId)
+            }
+        });
     }
+
+    const users = await userRepository.getUsersByIds(sqlCon, usersIds);
 
     for (const user of users) {
         await userObjectiveShareRepository.insert(sqlCon, { userId: String(user.id), objectiveId: objective.id });
@@ -61,10 +61,10 @@ export async function revoke(req: FastifyRequest<IUserObjectiveShareFSchema>, re
 
     const objective = await checkObjectiveExists(id);
 
-    const users = req.body.users;
+    const usersIds = req.body.users.map((user) => user.id);
 
-    const ownerIsRevokingYourself = users.some((user) => {
-        return user.id === req.user.id;
+    const ownerIsRevokingYourself = usersIds.some((userId) => {
+        return userId === req.user.id;
     });
 
     if (ownerIsRevokingYourself) {
@@ -73,17 +73,22 @@ export async function revoke(req: FastifyRequest<IUserObjectiveShareFSchema>, re
         });
     }
 
-    for (const user of users) {
-        if (!(await userObjectiveShareRepository.findAccessByUserAndObjective(sqlCon, user.id, objective.id))) {
-            throw new CustomException(HttpStatusCode.CONFLICT, "Sharing doesn't exist for this user", {
-                publicMessage: { message: "Sharing doesn't exist for this user", userId: user.id }
-            });
-        }
+    const existingShares = await userObjectiveShareRepository.findAccessesByUsersAndObjective(sqlCon, usersIds, objective.id);
+
+    const existingUserIds = existingShares.map((share) => share.userId);
+
+    const usersWithoutAccess = usersIds.filter((userId) => !existingUserIds.includes(userId));
+
+    if (usersWithoutAccess.length > 0) {
+        throw new CustomException(HttpStatusCode.CONFLICT, "Sharings aren't exist", {
+            publicMessage: {
+                message: "Sharings aren't exist for these users",
+                usersIds: usersWithoutAccess
+            }
+        });
     }
 
-    for (const user of users) {
-        await userObjectiveShareRepository.remove(sqlCon, { userId: user.id, objectiveId: objective.id });
-    }
+    await userObjectiveShareRepository.removeByUsersIds(sqlCon, existingUserIds, objective.id);
 
     return rep.code(HttpStatusCode.OK).send({
         message: "You've successfully revoked access from users",

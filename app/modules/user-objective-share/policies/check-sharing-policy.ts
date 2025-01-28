@@ -9,11 +9,10 @@ import * as userObjectiveShareRepository from "../repository.user-objective-shar
 export async function checkSharingPolicy(req: FastifyRequest<IGetByUuidFSchema>) {
     const { id } = req.params;
     const objective = await checkObjectiveExists(id);
-    if (req.user.id! !== objective.creatorId) {
-        if (!(await userObjectiveShareRepository.findAccessByUserAndObjective(sqlCon, req.user.id!, objective.id))) {
-            throw new CustomException(HttpStatusCode.FORBIDDEN, "Access denied", {
-                publicMessage: { message: "You have no access to this objective" }
-            });
-        }
+    if (!(await userObjectiveShareRepository.findAccessByUserAndObjective(sqlCon, req.user.id!, objective.id))) {
+        throw new CustomException(HttpStatusCode.FORBIDDEN, "Access denied", {
+            publicMessage: { message: "You have no access to this objective" }
+        });
     }
+    return;
 }

@@ -12,4 +12,5 @@ export async function checkObjectivePolicyGet(req: FastifyRequest<IGetByUuidFSch
             publicMessage: "You have no access to this objective"
         });
     }
+    return;
 }
