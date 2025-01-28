@@ -11,4 +11,5 @@ export const objectiveRouter = async (app: FastifyInstance) => {
     app.get("/:id", { schema: uuidFSchema }, objectiveController.findOne);
     app.get("/", { schema: paramsObjectiveFSchema }, objectiveController.findAll);
     app.patch("/:id", { schema: updateObjectiveFSchema, preHandler: app.auth([checkObjectivePolicyGet]) }, objectiveController.update);
+    app.delete("/:id", { schema: uuidFSchema, preHandler: app.auth([checkObjectivePolicyGet]) }, objectiveController.remove);
 };

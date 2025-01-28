@@ -50,3 +50,11 @@ export async function findAll(req: FastifyRequest<IQueryParamsFSchema>, rep: Fas
 
     return rep.code(HttpStatusCode.OK).send({ body: objectives.data, ...objectives.total });
 }
+
+export async function remove(req: FastifyRequest<IGetByUuidFSchema>, rep: FastifyReply) {
+    const { id } = req.params;
+
+    await objectiveRepository.remove(sqlCon, id);
+
+    return rep.code(HttpStatusCode.OK).send({ message: "You've successfully deleted the objective" });
+}

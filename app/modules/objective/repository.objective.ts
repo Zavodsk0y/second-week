@@ -49,3 +49,7 @@ export async function update(con: Kysely<DB> | Transaction<DB>, id: string, sche
         .where("id", "=", id)
         .executeTakeFirst();
 }
+
+export async function remove(con: Kysely<DB> | Transaction<DB>, id: string) {
+    return await con.deleteFrom("objectives").where("id", "=", id).execute();
+}
