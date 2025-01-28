@@ -3,6 +3,7 @@ import { sqlCon } from "../../common/config/kysely-config";
 import { HttpStatusCode } from "../../common/enum/http-status-code";
 import { CustomException } from "../../common/exceptions/custom-exception";
 import { IGetByUuidFSchema } from "../../common/schemas/uuid.schema";
+import { Users } from "../../common/types/kysely/db.type";
 import { checkObjectiveExists } from "../objective/utils/check-objective-exists";
 import { getUserById } from "../user/utils/get-user-by-id";
 import * as userObjectiveShareRepository from "./repository.user-objective-share";
@@ -13,9 +14,11 @@ export async function create(req: FastifyRequest<IUserObjectiveShareFSchema>, re
 
     const objective = await checkObjectiveExists(id);
 
-    const users = req.body.users;
+    const usersIds = req.body.users;
 
-    const ownerIsAddingYourself = users.some((user) => {
+    const users: Users[] = [];
+
+    const ownerIsAddingYourself = usersIds.some((user) => {
         return user.id === req.user.id;
     });
 
@@ -25,22 +28,21 @@ export async function create(req: FastifyRequest<IUserObjectiveShareFSchema>, re
         });
     }
 
-    for (const user of users) {
+    for (const user of usersIds) {
+        const checkedUser = await getUserById(user.id);
         if ((await userObjectiveShareRepository.findAccessByUserAndObjective(sqlCon, user.id, objective.id)) !== undefined) {
             throw new CustomException(HttpStatusCode.CONFLICT, "Sharing already exists", {
                 publicMessage: { message: "Sharing already exists for this user", userId: user.id }
             });
         }
+        users.push(checkedUser);
     }
 
     for (const user of users) {
-        let userEmail = await getUserById(user.id);
-        userEmail = userEmail.email;
-
-        await userObjectiveShareRepository.insert(sqlCon, { userId: user.id, objectiveId: objective.id });
+        await userObjectiveShareRepository.insert(sqlCon, { userId: String(user.id), objectiveId: objective.id });
 
         req.server.mailer.sendMail({
-            to: userEmail,
+            to: user.email,
             subject: `User Objective Share`,
             text: `User has shared objective with you!
         Objective: ${JSON.stringify(objective)}`
