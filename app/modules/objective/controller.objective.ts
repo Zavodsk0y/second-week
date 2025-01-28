@@ -1,9 +1,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { sqlCon } from "../../common/config/kysely-config";
 import { HttpStatusCode } from "../../common/enum/http-status-code";
-import { CustomException } from "../../common/exceptions/custom-exception";
 import { IGetByUuidFSchema } from "../../common/schemas/uuid.schema";
-import * as userObjectiveShareRepository from "../user-objective-share/repository.user-objective-share";
 import * as objectiveRepository from "./repository.objective";
 import { ICreateObjectiveFSchema } from "./schemas/create-objective.schema";
 import { IQueryParamsFSchema } from "./schemas/params-objective.schema";
@@ -33,14 +31,6 @@ export async function findOne(req: FastifyRequest<IGetByUuidFSchema>, rep: Fasti
     const { id } = req.params;
 
     const objective = await checkObjectiveExists(id);
-
-    if (req.user.id! !== objective.creatorId) {
-        if (!(await userObjectiveShareRepository.findAccessByUserAndObjective(sqlCon, req.user.id!, objective.id))) {
-            throw new CustomException(HttpStatusCode.FORBIDDEN, "Access denied", {
-                publicMessage: { message: "You have no access to this objective" }
-            });
-        }
-    }
 
     return rep.code(HttpStatusCode.OK).send({ ...objective });
 }
