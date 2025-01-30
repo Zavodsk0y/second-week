@@ -53,3 +53,9 @@ export async function update(con: Kysely<DB> | Transaction<DB>, id: string, sche
 export async function remove(con: Kysely<DB> | Transaction<DB>, id: string) {
     return await con.deleteFrom("objectives").where("id", "=", id).execute();
 }
+
+export async function findTasksToNotify(con: Kysely<DB> | Transaction<DB>) {
+    const now = new Date();
+
+    return await con.selectFrom("objectives").selectAll().where("notifyAt", "<=", now).where("isCompleted", "!=", true).execute();
+}
