@@ -3,7 +3,7 @@ definitions:
     in: path
     description: uuid path argument
     required: true
-    name: id
+    name: todoId
     schema:
       type: string
       format: uuid

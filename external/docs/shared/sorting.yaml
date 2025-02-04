@@ -1,18 +1,18 @@
 definitions:
-  sort_by:
-    in: query
-    name: sortBy
-    description: sort field parameter
-    required: false
-    schema:
-      type: string
-
-  order_by:
-    in: query
+  orderBy:
     name: orderBy
-    description: order direction
+    in: query
+    description: Define a field that you want order by
     required: false
     schema:
       type: string
-      enum: ["ASC", "DESC"]
+      enum: [ "createdAt", "notifyAt", "title" ]
 
+  orderDirection:
+    name: orderDirection
+    in: query
+    description: Define orderBy direction
+    required: false
+    schema:
+      type: string
+      enum: [ "asc", "desc" ]

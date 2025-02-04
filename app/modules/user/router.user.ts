@@ -6,5 +6,4 @@ import { signUpFSchema } from "./schemas/sign-up.schema";
 export const userRouter = async (app: FastifyInstance) => {
     app.post("/sign-up", { schema: signUpFSchema, config: { isPublic: true } }, userController.create);
     app.post("/login", { schema: loginFSchema, config: { isPublic: true } }, userController.login);
-    app.get("/me", {}, userController.me);
 };

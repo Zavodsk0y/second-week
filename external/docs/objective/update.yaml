@@ -1,0 +1,67 @@
+/to-do/{todoId}:
+  patch:
+    tags:
+      - Todo
+    summary: Update existing todo
+    security:
+      - bearer: [ ]
+    parameters:
+      - $ref: "#/definitions/uuid-param"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [ title ]
+            properties:
+              title:
+                type: string
+              description:
+                type: string
+              notifyAt:
+                type: string
+                format: date-time
+              isCompleted:
+                type: boolean
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                title:
+                  type: string
+                  minLength: 1
+                  maxLength: 127
+                description:
+                  type: string
+                creatorId:
+                  type: string
+                notifyAt:
+                  type: string
+                  format: date-time
+                createdAt:
+                  type: string
+                  format: date-time
+                  default: "2025-01-20T06:13:43Z"
+                updatedAt:
+                  type: string
+                  format: date-time
+                  default: "2025-01-20T06:13:43Z"
+                isCompleted:
+                  type: boolean
+                  default: false
+      404:
+        $ref: "#/definitions/404"
+      422:
+        $ref: "#/definitions/422"
+      401:
+        $ref: "#/definitions/401"
+      403:
+        $ref: "#/definitions/403"

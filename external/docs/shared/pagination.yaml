@@ -15,5 +15,5 @@ definitions:
       description: page index
       required: true
       schema:
-        type: integer
+        type: false
       example: 0

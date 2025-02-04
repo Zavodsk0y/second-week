@@ -11,6 +11,14 @@ export async function getByEmail(con: Kysely<DB>, email: string) {
     return await con.selectFrom("users").selectAll().where("email", "=", email).executeTakeFirst();
 }
 
+export async function getByLogin(con: Kysely<DB>, login: string) {
+    return await con.selectFrom("users").selectAll().where("login", "=", login).executeTakeFirst();
+}
+
 export async function getById(con: Kysely<DB> | Transaction<DB>, id: string) {
-    return await con.selectFrom("users").selectAll().where("id", "=", id).executeTakeFirstOrThrow();
+    return await con.selectFrom("users").selectAll().where("id", "=", id).executeTakeFirst();
+}
+
+export async function getUsersByIds(con: Kysely<DB> | Transaction<DB>, usersIds: string[]) {
+    return await con.selectFrom("users").selectAll().where("id", "in", usersIds).execute();
 }

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket Test Client</title>
+</head>
+<body>
+<h1>WebSocket Test Client</h1>
+
+<label for="userId">Enter User ID (UUID):</label>
+<label for="token">Enter your token here:</label>
+<input type="text" id="userId" placeholder="e.g., 550e8400-e29b-41d4-a716-446655440000">
+<input type="text" id="token" placeholder="token here">
+<button id="connectButton">Connect</button>
+<button id="disconnectButton" disabled>Disconnect</button>
+
+<h2>Notifications:</h2>
+<ul id="notifications"></ul>
+
+<script>
+  const userIdInput = document.getElementById('userId');
+  const connectButton = document.getElementById('connectButton');
+  const disconnectButton = document.getElementById('disconnectButton');
+  const notificationsList = document.getElementById('notifications');
+  const tokenInput = document.getElementById('token');
+
+  let socket = null;
+
+  // Функция для добавления уведомлений в список
+  function addNotification(message) {
+    const li = document.createElement('li');
+    li.textContent = message;
+    notificationsList.appendChild(li);
+  }
+
+  // Подключение к WebSocket
+  connectButton.addEventListener('click', () => {
+    const userId = userIdInput.value.trim();
+    const token = tokenInput.value.trim();
+    if (!userId) {
+      alert('Please enter a valid User ID.');
+      return;
+    }
+
+    // Создаем WebSocket-соединение
+    socket = new WebSocket(`ws://localhost:5000/`);
+
+    socket.onopen = () => {
+      console.log(`Connected to WebSocket server as user ${userId}`);
+      addNotification(`Connected as user ${userId}`);
+
+      // Отправляем сообщение для подписки
+      socket.send(JSON.stringify({
+        type: 'subscribe',
+        userId: userId,
+        token: token
+      }));
+
+      // Обновляем состояние кнопок
+      connectButton.disabled = true;
+      disconnectButton.disabled = false;
+    };
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === 'Notification') {
+        addNotification(`Notification: ${data.message}`);
+      }
+    };
+
+    socket.onclose = () => {
+      console.log('Disconnected from WebSocket server');
+      addNotification('Disconnected from server');
+
+      // Обновляем состояние кнопок
+      connectButton.disabled = false;
+      disconnectButton.disabled = true;
+    };
+  });
+
+  // Отключение от WebSocket
+  disconnectButton.addEventListener('click', () => {
+    if (socket) {
+      socket.close();
+      socket = null;
+    }
+  });
+</script>
+</body>
+</html>

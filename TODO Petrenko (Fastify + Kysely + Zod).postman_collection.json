@@ -1,0 +1,914 @@
+{
+	"info": {
+		"_postman_id": "66861b46-841e-43eb-a7f2-90e13aa583b8",
+		"name": "TODO Petrenko (Fastify + Kysely + Zod)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29905793"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"\r",
+									"\r",
+									"pm.environment.set(\"accessToken\", jsonData.accessToken);\r",
+									"pm.globals.set(\"accessToken\", jsonData.accessToken);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/10.3.0"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"testUser@mail.ru\",\n\t\"password\": \"QWEasd123@\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/user/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign up",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"\r",
+									"\r",
+									"pm.environment.set(\"accessToken\", jsonData.accessToken);\r",
+									"pm.globals.set(\"accessToken\", jsonData.accessToken);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/10.3.0",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"testUser@mail.ru\",\n\t\"login\": \"Alex\",\n\t\"password\": \"QWEasd123@\",\n\t\"name\": \"Aleksandr\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/user/sign-up",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"user",
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Objective",
+			"item": [
+				{
+					"name": "Get with Query-Params",
+					"item": [
+						{
+							"name": "Completed objectives",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"followRedirects": true,
+								"disableUrlEncoding": false,
+								"disableCookies": false
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "insomnia/10.3.0"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/to-do?isCompleted=true",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"to-do"
+									],
+									"query": [
+										{
+											"key": "isCompleted",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "createdAt Sorted",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"followRedirects": true,
+								"disableUrlEncoding": false,
+								"disableCookies": false
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "insomnia/10.3.0"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/to-do?sortCreatedAt=asc",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"to-do"
+									],
+									"query": [
+										{
+											"key": "sortCreatedAt",
+											"value": "asc"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "notifyAt Sorted",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"followRedirects": true,
+								"disableUrlEncoding": false,
+								"disableCookies": false
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "insomnia/10.3.0"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/to-do?sortNotifyAt=desc",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"to-do"
+									],
+									"query": [
+										{
+											"key": "sortNotifyAt",
+											"value": "desc"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "title Search",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"followRedirects": true,
+								"disableUrlEncoding": false,
+								"disableCookies": false
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "insomnia/10.3.0"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/to-do?search=upd",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"to-do"
+									],
+									"query": [
+										{
+											"key": "search",
+											"value": "upd"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Limit & offset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"followRedirects": true,
+								"disableUrlEncoding": false,
+								"disableCookies": false
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "User-Agent",
+										"value": "insomnia/10.3.0"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/to-do?limit=1&offset=1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"to-do"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "1"
+										},
+										{
+											"key": "offset",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get one todo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"value": "insomnia/10.3.0",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{host}}/to-do/:todoId",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"to-do",
+								":todoId"
+							],
+							"variable": [
+								{
+									"key": "todoId",
+									"value": "uuid"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Todo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "User-Agent",
+								"value": "insomnia/10.3.0",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{host}}/to-do/:todoId",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"to-do",
+								":todoId"
+							],
+							"variable": [
+								{
+									"key": "todoId",
+									"value": "4fca9fdc-d2e5-4dea-99d6-60e6f7e2673c"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user's todos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"value": "insomnia/10.3.0"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/to-do",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"to-do"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": null,
+									"description": "Title search (like operator)",
+									"disabled": true
+								},
+								{
+									"key": "sortCreatedAt",
+									"value": null,
+									"description": "Sort on createdAt field (asc, desc)",
+									"disabled": true
+								},
+								{
+									"key": "sortNotifyAt",
+									"value": null,
+									"description": "Sort on notifyAt field (asc, desc)",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": null,
+									"description": "max. rows (number)",
+									"disabled": true
+								},
+								{
+									"key": "offset",
+									"value": null,
+									"description": "skip (number)",
+									"disabled": true
+								},
+								{
+									"key": "isCompleted",
+									"value": null,
+									"description": "Filter your todos with isCompleted field (true, false)",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user's todo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/10.3.0",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\t\"title\": \"updated\",\n\t\t\"description\": \"updated\",\n\t\t\"isCompleted\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/to-do/:todoId",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"to-do",
+								":todoId"
+							],
+							"variable": [
+								{
+									"key": "todoId",
+									"value": "uuid"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create To-do",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/10.3.0",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\t\"title\": \"Title\",\n\t\t\"description\": \"Description\",\n        \"notifyAt\": \"2025-01-21T23:13:43.000Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/to-do",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"to-do"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Shares",
+			"item": [
+				{
+					"name": "Revoke Access",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"users\": [\r\n        {\r\n            \"id\": \"388d8ab6-3e06-4677-b478-dd0b18a0656b\"\r\n        },\r\n        {\r\n            \"id\": \"ea9f2a6e-90e0-4727-a213-72ef8fc7917f\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/to-do/:todoId/revoke",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"to-do",
+								":todoId",
+								"revoke"
+							],
+							"variable": [
+								{
+									"key": "todoId",
+									"value": "1d70ba52-3994-4ae8-bdee-e3369f1351e4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get shared todos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/to-do/shared",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"to-do",
+								"shared"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get granted users for todo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/to-do/:to-do-id/list-grants",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"to-do",
+								":to-do-id",
+								"list-grants"
+							],
+							"variable": [
+								{
+									"key": "to-do-id",
+									"value": "1d70ba52-3994-4ae8-bdee-e3369f1351e4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Grant Access",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"users\": [\r\n        {\r\n            \"id\": \"388d8ab6-3e06-4677-b478-dd0b18a0656b\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/to-do/:id/share",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"to-do",
+								":id",
+								"share"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4fca9fdc-d2e5-4dea-99d6-60e6f7e2673c"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
