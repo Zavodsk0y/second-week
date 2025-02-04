@@ -9,7 +9,9 @@
 <h1>WebSocket Test Client</h1>
 
 <label for="userId">Enter User ID (UUID):</label>
+<label for="token">Enter your token here:</label>
 <input type="text" id="userId" placeholder="e.g., 550e8400-e29b-41d4-a716-446655440000">
+<input type="text" id="token" placeholder="token here">
 <button id="connectButton">Connect</button>
 <button id="disconnectButton" disabled>Disconnect</button>
 
@@ -21,6 +23,7 @@
   const connectButton = document.getElementById('connectButton');
   const disconnectButton = document.getElementById('disconnectButton');
   const notificationsList = document.getElementById('notifications');
+  const tokenInput = document.getElementById('token');
 
   let socket = null;
 
@@ -34,6 +37,7 @@
   // Подключение к WebSocket
   connectButton.addEventListener('click', () => {
     const userId = userIdInput.value.trim();
+    const token = tokenInput.value.trim();
     if (!userId) {
       alert('Please enter a valid User ID.');
       return;
@@ -49,7 +53,8 @@
       // Отправляем сообщение для подписки
       socket.send(JSON.stringify({
         type: 'subscribe',
-        userId,
+        userId: userId,
+        token: token
       }));
 
       // Обновляем состояние кнопок

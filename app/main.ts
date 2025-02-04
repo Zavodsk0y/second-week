@@ -37,7 +37,7 @@ async function app() {
     await app.register(fastifyMailer, mailerOption);
     await app.register(fastifyAuth, { defaultRelation: "or" });
     await app.register(fastifyWebsocket);
-    // await globalAuthHook(app);
+    await globalAuthHook(app);
 
     cron.schedule("* * * * *", async () => {
         console.log("Running a task every minute");

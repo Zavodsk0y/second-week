@@ -1,28 +1,31 @@
 import { FastifyInstance } from "fastify";
-import { WebSocket } from "ws";
+import jwt from "jsonwebtoken";
+import { addConnection, removeConnection } from "./utils/web-sockets-connect";
 
-export const activeConnections = new Map<string, WebSocket>();
+interface ITokenJwtPayload extends jwt.JwtPayload {
+    id: string;
+    email: string;
+    iat: number;
+    exp: number;
+}
 
 export const webSocketsRouter = async (app: FastifyInstance) => {
-    app.get("/", { websocket: true }, (socket) => {
-        console.log("WebSocket connection opened");
-
+    app.get("/", { websocket: true, config: { isPublic: true } }, (socket) => {
         socket.on("message", (message) => {
             const data = JSON.parse(message.toString());
-            if (data.type === "subscribe" && data.userId) {
-                activeConnections.set(data.userId, socket);
-                console.log(`User connected: ${data.userId}`);
-            }
-        });
-
-        socket.on("close", () => {
-            for (const [userId, ws] of activeConnections.entries()) {
-                if (ws === socket) {
-                    activeConnections.delete(userId);
-                    console.log(`User ${userId} disconnected`);
-                    break;
+            if (data.type === "subscribe" && data.userId && data.token) {
+                try {
+                    const decoded = jwt.verify(data.token, process.env.JWT_SECRET!) as ITokenJwtPayload;
+                    if (decoded.id === data.userId) {
+                        addConnection(data.userId, socket);
+                    }
+                } catch {
+                    socket.close();
                 }
             }
+        });
+        socket.on("close", () => {
+            removeConnection(socket);
         });
     });
 };
