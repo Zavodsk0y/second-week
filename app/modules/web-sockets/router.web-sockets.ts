@@ -8,7 +8,6 @@ export const webSocketsRouter = async (app: FastifyInstance) => {
             if (data.type === "subscribe" && req.headers.authorization!.split(" ")[1]) {
                 try {
                     addConnection(req.user.id!, socket);
-                    console.log("user added!");
                 } catch {
                     socket.close();
                 }

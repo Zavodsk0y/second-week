@@ -40,7 +40,6 @@ async function app() {
     await globalAuthHook(app);
 
     cron.schedule("* * * * *", async () => {
-        console.log("Running a task every minute");
         await notifyJob();
     });
 
